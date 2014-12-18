@@ -67,7 +67,7 @@ class ProfilesController extends AppController {
 			if (empty($user)) {
 				throw new ForbiddenException("please login first !");
 			}
-			var_dump($user);
+			// var_dump($user);
 			$oldprofile = $user['Profile'];
 			$user = $user['User'];
 			$userid = $user['id'];
@@ -79,11 +79,11 @@ class ProfilesController extends AppController {
 								array_key_exists("waist", $profile) == false) {
 				throw new Exception("required profile field missing !",900);
 			}
-			var_dump($profile);
+			// var_dump($profile);
 			
 			$profile['user_id'] = $userid;
 			
-			var_dump($profile);
+			// var_dump($profile);
 
 			$this->User->Profile->clear();
 			$this->User->Profile->set($oldprofile);
@@ -91,7 +91,7 @@ class ProfilesController extends AppController {
 			$this->User->Profile->save();
 
 			$newprofile = $this->Profile->read();
-			var_dump($newprofile);
+			// var_dump($newprofile);
 			
 			$return_body = array('result' => array('code' => '0',
 													'message' => 'update success !'));

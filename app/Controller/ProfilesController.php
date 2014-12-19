@@ -92,7 +92,7 @@ class ProfilesController extends AppController {
 
 			$newprofile = $this->User->Profile->read();
 			$newprofile = $newprofile['Profile'];
-			var_dump($newprofile);
+			//var_dump($newprofile);
 			
 			// $result_body = array('code' => '0','message' => 'update success !');
 			// $result_body['profile'] = $newprofile;

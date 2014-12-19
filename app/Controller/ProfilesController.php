@@ -90,13 +90,31 @@ class ProfilesController extends AppController {
 			$this->User->Profile->set($profile);
 			$this->User->Profile->save();
 
-			$newprofile = $this->Profile->read();
-			// var_dump($newprofile);
+			$newprofile = $this->User->Profile->read();
+			$newprofile = $newprofile['Profile'];
+			var_dump($newprofile);
 			
-			$return_body = array('result' => array('code' => '0',
-													'message' => 'update success !'));
-			$return_body['profile'] = $newprofile;
+			// $result_body = array('code' => '0','message' => 'update success !');
+			// $result_body['profile'] = $newprofile;
+			// var_dump($result_body);
+			// $return_body = array();
+			// $return_body['result'] = $result_body;
+			// var_dump($return_body);
+
+			$return_body = array('result' => array('code' => '0', 'message' => 'update success !'));
+			$return_body['result']['profile'] = $newprofile;			
 			$this->response->body(json_encode($return_body));
+			// $this->response->body(json_encode(array('result' => array('code' => '0', 
+			// 														  'message' => 'update success !', 
+			// 														  'profile' => array('id' => $newprofile['id'],
+			// 														  					 'user_id' => $newprofile['user_id'],
+			// 														  					 'nick_name' => $newprofile['nick_name'],
+			// 														  					 'last_name' => $newprofile['last_name'],
+			// 														  					 'first_name' => $newprofile['first_name'],
+			// 														  					 'height' => $newprofile['height'],
+			// 														  					 'waist' => $newprofile['waist'],
+			// 														  					 'sex' => $newprofile['sex'],
+			// 														  					 'birth_date' => $newprofile['birth_date'])))));
 		} catch (Exception $e) {
 			$this->response->body(json_encode(array('error' => array('code' => $e->getCode(), 'message' => $e->getMessage()))));
 		}

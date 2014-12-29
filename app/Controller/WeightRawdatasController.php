@@ -36,6 +36,7 @@ class WeightRawdatasController extends AppController {
 	public function Upload() {
 		try {
 			$this->autoRender = false;
+			$this->response->type('json');
 
 			if ($this->request->is('post') == false) {
 				throw new ForbiddenException();
@@ -107,6 +108,59 @@ class WeightRawdatasController extends AppController {
 		} catch (Exception $e) {
 			$this->response->body(json_encode(array('error' => array('code' => $e->getCode(), 'message' => $e->getMessage()))));
 			//$this->response->send();
+		}
+	}
+
+	public function Query() {
+		try {
+			$this->autoRender = false;
+			$this->response->type('json');
+
+			if ($this->request->is('post') == false) {
+				throw new ForbiddenException();
+			}
+
+			$rawdata = $this->request->input('json_decode',true);
+			if (empty($rawdata)) {
+				throw new Exception("data format error !", 900);
+			}
+
+			if (array_key_exists("login", $rawdata) == false) {
+				throw new Exception("require data missing !", 900);
+			}
+
+			$login = $rawdata['login'];
+
+			if (array_key_exists("email", $login) == false || 
+					array_key_exists("auto_login_token", $login) == false) {
+				throw new Exception("required login field missing !", 900);
+			}
+
+			$email = $login['email'];
+			$auto_login_token = $login['auto_login_token'];
+
+			$conditions = array('email' => $email, 'auto_login_token' => $auto_login_token);
+			$user = $this->User->find('first',array('conditions' => $conditions));
+			if (empty($user)) {
+				throw new Exception("please login first !", 900);
+			}
+			//var_dump($user);
+			$user = $user['User'];
+			$userid = $user['id'];
+
+			$queryconditions = array('user_id' => $userid);
+			$queryorder = array('WeightRawdata.id DESC');
+			$weightrawdata = $this->WeightRawdata->find('first',array('conditions' => $queryconditions, 'order' => $queryorder));
+			if (empty($weightrawdata)) {
+				throw new Exception("no record be found", 900);
+			}
+			$weightrawdata = $weightrawdata['WeightRawdata'];
+
+			$return_body = array('result' => array('code' => '0', 'message' => 'query success !'));
+			$return_body['result']['weightrawdata'] = $weightrawdata;
+			$this->response->body(json_encode($return_body));
+		} catch (Exception $e) {
+			$this->response->body(json_encode(array('error' => array('code' => $e->getCode(), 'message' => $e->getMessage()))));
 		}
 	}
 

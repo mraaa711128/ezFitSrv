@@ -32,6 +32,6 @@ App::uses('AppModel', 'Model');
 class WeightRawdata extends AppModel {
 	public $belongsTo = array('Scale' => 
 							  array('className' => 'Scale',
-									'ForeignKey' => 'scale_mac_addr'));
+									'foreignKey' => 'scale_mac_addr'));
 	
 }

@@ -58,15 +58,18 @@ class UsersController extends AppController {
 			if (empty($user)) {
 				throw new Exception("user_id/password is wrong !", 404);
 			} else {
+				$profile = $user['Profile'];
 				$user = $user['User'];
 				$userid = $user['id'];
 				$email = $user['email'];
 				$auto_login_token = $user['auto_login_token'];
-				$this->response->body(json_encode(array('result' => array('code' => '0', 
-																	  	  'message' => 'login success !', 
-																	      'userinfo' => array('user_id' => $userid, 
-																	      					  'email' => $email, 
-																	      					  'auto_login_token' => $auto_login_token)))));
+				$return_body = array('result' => array('code' => '0', 
+									 				   'message' => 'login success !', 
+									 				   'userinfo' => array('user_id' => $userid, 
+									 					  				   'email' => $email, 
+										 					  			   'auto_login_token' => $auto_login_token)));
+				$return_body['result']['userprofile'] = $profile;
+				$this->response->body(json_encode($return_body));
 			}
 		} catch (Exception $e) {
 			$this->response->body(json_encode(array('error' => array('code' => $e->getCode(), 'message' => $e->getMessage()))));
